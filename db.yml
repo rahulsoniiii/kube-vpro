@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: vprodb
+  namespace: vprofile
+spec:
+  selector:
+    matchLabels:
+      app: vprodb
+  serviceName: vprodb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vprodb
+    spec:
+      containers:
+        - name: vprodb
+          image: rahulsoni07064/vprodb:v2
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: root-password
+
+            - name: MYSQL_USER
+              value: rahul
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: rahul-password
+                  
+          volumeMounts:
+            - name: mysql-volume
+              mountPath: /var/lib/mysql
+
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-volume
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: ebs-sc
+        resources:
+          requests:
+            storage: 2Gi
