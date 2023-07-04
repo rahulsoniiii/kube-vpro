@@ -16,8 +16,8 @@ spec:
       containers:
         - name: vprodb
           image: rahulsoni07064/vprodb:v1
-          args:
-            - "--ignore-db-dir=lost+found"
+          securityContext:
+            runAsUser: 999
           ports:
             - containerPort: 3306
           env:
