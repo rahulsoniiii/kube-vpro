@@ -17,7 +17,7 @@ spec:
         - name: vprodb
           image: rahulsoni07064/vprodb:v1
           securityContext:
-            runAsUser: 999
+            runAsUser: 0
           ports:
             - containerPort: 3306
           env:
