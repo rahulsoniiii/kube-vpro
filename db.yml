@@ -15,7 +15,9 @@ spec:
     spec:
       containers:
         - name: vprodb
-          image: rahulsoni07064/vprodb:v2
+          image: rahulsoni07064/vprodb:v1
+          args:
+            - "--ignore-db-dir=lost+found"
           ports:
             - containerPort: 3306
           env:
