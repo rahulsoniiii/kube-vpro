@@ -1,13 +1,12 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: vprodb
+  name: vprodb-deployment
   namespace: vprofile
 spec:
   selector:
     matchLabels:
       app: vprodb
-  serviceName: vprodb
   replicas: 1
   template:
     metadata:
@@ -25,7 +24,6 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: root-password
-
             - name: MYSQL_USER
               value: rahul
             - name: MYSQL_PASSWORD
@@ -33,18 +31,17 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: rahul-password
-                  
           volumeMounts:
             - name: mysql-volume
               mountPath: /var/lib/mysql
-
-  volumeClaimTemplates:
-    - metadata:
-        name: mysql-volume
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        storageClassName: ebs-sc
-        resources:
-          requests:
-            storage: 2Gi
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: "0.5"
+              memory: 512Mi
+      volumes:
+        - name: mysql-volume
+          persistentVolumeClaim:
+            claimName: mysql-pvc

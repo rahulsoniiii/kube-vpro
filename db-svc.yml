@@ -4,7 +4,6 @@ metadata:
   name: vprodb
   namespace: vprofile
 spec:
-  clusterIP: None
   selector:
     app: vprodb
   ports:
